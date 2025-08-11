@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
-  const API_URL = process.env.API_URL || "http://localhost:3001";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
   // "https://ai-therapist-agent-backend.onrender.com";
 
   // const token = localStorage.getItem("token");
