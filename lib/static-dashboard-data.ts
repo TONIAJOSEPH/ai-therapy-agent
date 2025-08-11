@@ -1,5 +1,5 @@
 // Static data for the dashboard
-const staticChatHistory = [
+const staticChatHistory: ChatMessage[] = [
   {
     id: "1",
     userId: "user1",
@@ -7,7 +7,7 @@ const staticChatHistory = [
     role: "assistant",
     timestamp: new Date(Date.now() - 1000 * 60 * 5),
     sentiment: "positive",
-    context: null,
+    context: undefined,
   },
   {
     id: "2",
@@ -16,7 +16,7 @@ const staticChatHistory = [
     role: "user",
     timestamp: new Date(Date.now() - 1000 * 60 * 4),
     sentiment: "negative",
-    context: null,
+    context: undefined,
   },
   {
     id: "3",
@@ -26,7 +26,7 @@ const staticChatHistory = [
     role: "assistant",
     timestamp: new Date(Date.now() - 1000 * 60 * 3),
     sentiment: "neutral",
-    context: null,
+    context: undefined,
   },
 ];
 
@@ -82,6 +82,22 @@ const staticActivities = [
   },
 ];
 
+interface ChatMessage {
+  id: string;
+  userId: string;
+  message: string;
+  role: "user" | "assistant";
+  timestamp: Date;
+  sentiment: string;
+  //   sentiment: "neutral" | "positive" | "negative";
+  context: ChatContext | undefined;
+}
+
+interface ChatContext {
+  topic?: string;
+  sessionId?: string;
+  metadata?: Record<string, unknown>; // flexible key-value metadata
+}
 export const getSessionChatHistory = async (sessionId: string) => {
   return staticChatHistory;
 };
@@ -90,7 +106,7 @@ export const saveChatMessage = async (data: {
   userId: string;
   message: string;
   role: "user" | "assistant";
-  context?: any;
+  context?: ChatContext;
 }) => {
   const newMessage = {
     id: Math.random().toString(36).substr(2, 9),
@@ -167,9 +183,9 @@ export const getLatestHealthMetrics = async (userId: string) => {
   };
 };
 
-export const getUserActivities = async (userId: string) => {
-  return staticActivities.filter((activity) => activity.userId === userId);
-};
+// export const getUserActivities = async (userId: string) => {
+//   return staticActivities.filter((activity) => activity.userId === userId);
+// };
 
 export const saveMoodData = async (data: {
   userId: string;
@@ -194,27 +210,27 @@ export const saveMoodData = async (data: {
   return newActivity;
 };
 
-export const logActivity = async (data: {
-  userId: string;
-  type: string;
-  name: string;
-  description?: string;
-  duration?: number;
-}) => {
-  const newActivity = {
-    id: Math.random().toString(36).substr(2, 9),
-    userId: data.userId,
-    type: data.type,
-    name: data.name,
-    description: data.description || "",
-    timestamp: new Date(),
-    duration: data.duration || 0,
-    completed: false,
-    moodScore: 0,
-    moodNote: "",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-  staticActivities.push(newActivity);
-  return newActivity;
-};
+// export const logActivity = async (data: {
+//   userId: string;
+//   type: string;
+//   name: string;
+//   description?: string;
+//   duration?: number;
+// }) => {
+//   const newActivity = {
+//     id: Math.random().toString(36).substr(2, 9),
+//     userId: data.userId,
+//     type: data.type,
+//     name: data.name,
+//     description: data.description || "",
+//     timestamp: new Date(),
+//     duration: data.duration || 0,
+//     completed: false,
+//     moodScore: 0,
+//     moodNote: "",
+//     createdAt: new Date(),
+//     updatedAt: new Date(),
+//   };
+//   staticActivities.push(newActivity);
+//   return newActivity;
+// };

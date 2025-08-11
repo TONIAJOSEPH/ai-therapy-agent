@@ -10,6 +10,12 @@ import { Input } from "@/components/ui/input";
 import { Mail, User, Lock } from "lucide-react";
 import { registerUser } from "@/lib/api/auth";
 
+interface FetchError {
+  message: string;
+  status?: number;
+}
+
+type AppError = Error | FetchError;
 export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -30,8 +36,9 @@ export default function SignupPage() {
     try {
       await registerUser(name, email, password);
       router.push("/login");
-    } catch (err: any) {
-      setError(err.message || "Signup failed. Please try again.");
+    } catch (err: AppError | unknown) {
+      const error = err as { message?: string };
+      setError(error.message || "Signup failed. Please try again.");
     } finally {
       setLoading(false);
     }

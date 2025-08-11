@@ -5,10 +5,10 @@ const BACKEND_API_URL = process.env.BACKEND_API_URL || "http://localhost:3001";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { sessionId: string } }
+  context: { params: Promise<{ sessionId: string }> }
 ) {
   try {
-    const { sessionId } = params;
+    const { sessionId } = await context.params; // Await because it's a Promise
     const response = await fetch(
       `${BACKEND_API_URL}/chat/sessions/${sessionId}/history`
     );
@@ -30,10 +30,10 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { sessionId: string } }
+  context: { params: Promise<{ sessionId: string }> }
 ) {
   try {
-    const { sessionId } = params;
+    const { sessionId } = await context.params; // Await because it's a Promise
     const { message } = await req.json();
 
     if (!message) {

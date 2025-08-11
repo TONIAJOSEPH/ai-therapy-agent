@@ -16,9 +16,19 @@ interface MoodStats {
   }>;
 }
 
+interface MoodResponse {
+  success: boolean;
+  data: {
+    id: string;
+    mood: string;
+    note?: string;
+    timestamp: string;
+  };
+}
+
 export async function trackMood(
   data: MoodEntry
-): Promise<{ success: boolean; data: any }> {
+): Promise<{ success: boolean; data: MoodEntry }> {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("Not authenticated");
   console.log("track mood in lib");
@@ -43,7 +53,7 @@ export async function getMoodHistory(params?: {
   startDate?: string;
   endDate?: string;
   limit?: number;
-}): Promise<{ success: boolean; data: any[] }> {
+}): Promise<{ success: boolean; data: MoodResponse[] }> {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("Not authenticated");
 

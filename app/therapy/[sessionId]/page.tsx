@@ -25,6 +25,13 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
 
+type Progress = {
+  step: string; // e.g., "Signup"
+  status: "pending" | "in-progress" | "completed" | "failed";
+  timestamp?: Date; // optional if you track time
+  note?: string;
+};
+
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
@@ -32,7 +39,7 @@ export interface ChatMessage {
   metadata?: {
     technique: string;
     goal: string;
-    progress: string[];
+    progress: Progress[];
     analysis?: {
       emotionalState: string;
       themes: string[];
@@ -61,7 +68,7 @@ interface ApiResponse {
   metadata: {
     technique: string;
     goal: string;
-    progress: any[];
+    progress: Progress[];
   };
 }
 

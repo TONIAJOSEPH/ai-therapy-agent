@@ -4,12 +4,18 @@ const BACKEND_API_URL = process.env.BACKEND_API_URL || "http://localhost:3001";
 
 // "https://ai-therapist-agent-backend.onrender.com";
 
+export type Message = {
+  role: string;
+  content: string;
+  timestamp: string | number | Date; // Choose based on your actual data
+};
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { sessionId: string } }
+  context: { params: Promise<{ sessionId: string }> }
 ) {
   try {
-    const { sessionId } = params;
+    const { sessionId } = await context.params; // Await because it's a Promise
     console.log(`Getting chat history for session ${sessionId}`);
 
     const response = await fetch(
@@ -35,7 +41,7 @@ export async function GET(
     console.log("Chat history retrieved successfully:", data);
 
     // Format the response to match the frontend's expected format
-    const formattedMessages = data.map((msg: any) => ({
+    const formattedMessages = data.map((msg: Message) => ({
       role: msg.role,
       content: msg.content,
       timestamp: msg.timestamp,

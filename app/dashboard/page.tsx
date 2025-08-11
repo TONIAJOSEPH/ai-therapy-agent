@@ -3,6 +3,7 @@
 import { Container } from "@/components/ui/container";
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { LucideIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -126,7 +127,7 @@ const generateInsights = (activities: Activity[]) => {
   const insights: {
     title: string;
     description: string;
-    icon: any;
+    icon: LucideIcon;
     priority: "low" | "medium" | "high";
   }[] = [];
 
@@ -261,7 +262,7 @@ export default function DashboardPage() {
     {
       title: string;
       description: string;
-      icon: any;
+      icon: LucideIcon;
       priority: "low" | "medium" | "high";
     }[]
   >([]);
