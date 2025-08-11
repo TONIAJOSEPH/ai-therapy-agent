@@ -214,18 +214,6 @@ export default function Home() {
             </Button>
           </motion.div>
         </motion.div>
-
-        {/* Enhanced scroll indicator */}
-        {/* <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.8 }}
-        >
-          <div className="w-6 h-10 rounded-full border-2 border-primary/20 flex items-start justify-center p-1 hover:border-primary/40 transition-colors duration-300">
-            <div className="w-1 h-2 rounded-full bg-primary animate-scroll" />
-          </div>
-        </motion.div> */}
       </section>
 
       {/* features grid */}

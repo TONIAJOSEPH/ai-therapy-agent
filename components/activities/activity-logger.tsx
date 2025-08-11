@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { useToast } from "@/components/ui/use-toast";
+
 import { useSession } from "@/lib/contexts/session-context";
 import { logActivity } from "@/lib/api/activity";
 
@@ -49,26 +49,12 @@ export function ActivityLogger({
   const [name, setName] = useState("");
   const [duration, setDuration] = useState("");
   const [description, setDescription] = useState("");
-  // const { toast } = useToast();
-  const { user, isAuthenticated, loading } = useSession();
+  const { loading } = useSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // if (!isAuthenticated) {
-    //   toast({
-    //     title: "Authentication required",
-    //     description: "Please log in to log activities",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
 
     if (!type || !name) {
-      // toast({
-      //   title: "Missing information",
-      //   description: "Please fill in all required fields",
-      //   variant: "destructive",
-      // });
       return;
     }
 
@@ -87,21 +73,10 @@ export function ActivityLogger({
       setDuration("");
       setDescription("");
 
-      // toast({
-      //   title: "Activity logged successfully!",
-      //   description: "Your activity has been recorded.",
-      // });
-
       onActivityLogged();
       onOpenChange(false);
     } catch (error) {
       console.error("Error logging activity:", error);
-      // toast({
-      //   title: "Error",
-      //   description:
-      //     error instanceof Error ? error.message : "Failed to log activity",
-      //   variant: "destructive",
-      // });
     } finally {
       setIsLoading(false);
     }

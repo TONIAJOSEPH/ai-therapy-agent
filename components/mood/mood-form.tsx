@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Loader2 } from "lucide-react";
-// import { useToast } from "@/components/ui/use-toast";
 import { useSession } from "@/lib/contexts/session-context";
 import { useRouter } from "next/navigation";
 
@@ -15,7 +14,6 @@ interface MoodFormProps {
 export function MoodForm({ onSuccess }: MoodFormProps) {
   const [moodScore, setMoodScore] = useState(50);
   const [isLoading, setIsLoading] = useState(false);
-  // const { toast } = useToast();
   const { user, isAuthenticated, loading } = useSession();
   const router = useRouter();
 
@@ -36,11 +34,7 @@ export function MoodForm({ onSuccess }: MoodFormProps) {
 
     if (!isAuthenticated) {
       console.log("MoodForm: User not authenticated");
-      // toast({
-      //   title: "Authentication required",
-      //   description: "Please log in to track your mood",
-      //   variant: "destructive",
-      // });
+
       router.push("/login");
       return;
     }
@@ -73,21 +67,10 @@ export function MoodForm({ onSuccess }: MoodFormProps) {
       const data = await response.json();
       console.log("MoodForm: Success response:", data);
 
-      // toast({
-      //   title: "Mood tracked successfully!",
-      //   description: "Your mood has been recorded.",
-      // });
-
       // Call onSuccess to close the modal
       onSuccess?.();
     } catch (error) {
       console.error("MoodForm: Error:", error);
-      // toast({
-      //   title: "Error",
-      //   description:
-      //     error instanceof Error ? error.message : "Failed to track mood",
-      //   variant: "destructive",
-      // });
     } finally {
       setIsLoading(false);
     }

@@ -17,7 +17,6 @@ import {
   BrainCircuit,
   Calendar,
   Heart,
-  Loader2,
   MessageSquare,
   Moon,
   Sparkles,
@@ -33,11 +32,7 @@ import {
   startOfDay,
   isWithinInterval,
 } from "date-fns";
-import {
-  getUserActivities,
-  saveMoodData,
-  logActivity,
-} from "@/lib/static-dashboard-data";
+
 import {
   Dialog,
   DialogContent,
@@ -259,8 +254,8 @@ export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  const { user, isAuthenticated } = useSession();
-  // console.log("user in dashboard", user);
+  const { user } = useSession();
+
   // Rename the state variable
   const [insights, setInsights] = useState<
     {
@@ -274,11 +269,10 @@ export default function DashboardPage() {
   // New states for activities and wearables
   const [activities, setActivities] = useState<Activity[]>([]);
   const [showMoodModal, setShowMoodModal] = useState(false);
-  const [showCheckInChat, setShowCheckInChat] = useState(false);
+
   const [activityHistory, setActivityHistory] = useState<DayActivity[]>([]);
   const [showActivityLogger, setShowActivityLogger] = useState(false);
-  const [isSavingActivity, setIsSavingActivity] = useState(false);
-  const [isSavingMood, setIsSavingMood] = useState(false);
+
   const [dailyStats, setDailyStats] = useState<DailyStats>({
     moodScore: null,
     completionRate: 100,
@@ -365,19 +359,18 @@ export default function DashboardPage() {
   // Add function to fetch daily stats
   const fetchDailyStats = useCallback(async () => {
     try {
-      console.log("dashboard sessions");
       // Fetch therapy sessions using the chat API
       const sessions = await getAllChatSessions();
-      console.log("sessions", sessions);
-      // Fetch today's activities
+
       // const activitiesResponse = await fetch("/api/activities/today");
-      const activitiesResponse = await getAllActivity();
-      console.log("activities response", activitiesResponse.data);
       // if (!activitiesResponse.ok) throw new Error("Failed to fetch activities");
       // const activities = await activitiesResponse.json();
+
+      // Fetch today's activities
+      const activitiesResponse = await getAllActivity();
       const activities = activitiesResponse.data;
       // setActivities(activities);
-      console.log("activites", activities);
+
       // Calculate mood score from activities
       const moodEntries = activities.filter(
         (a: Activity) => a.type === "mood" && a.moodScore !== null
@@ -455,22 +448,6 @@ export default function DashboardPage() {
   const handleStartTherapy = () => {
     router.push("/therapy/new");
   };
-
-  // const handleMoodSubmit = async (data: { moodScore: number }) => {
-  //   setIsSavingMood(true);
-  //   try {
-  //     await saveMoodData({
-  //       userId: "default-user",
-  //       mood: data.moodScore,
-  //       note: "",
-  //     });
-  //     setShowMoodModal(false);
-  //   } catch (error) {
-  //     console.error("Error saving mood:", error);
-  //   } finally {
-  //     setIsSavingMood(false);
-  //   }
-  // };
 
   const handleAICheckIn = () => {
     setShowActivityLogger(true);
