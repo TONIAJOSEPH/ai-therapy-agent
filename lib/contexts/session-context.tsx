@@ -64,7 +64,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         await fetch("/api/auth/logout", {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            // Authorization: `Bearer ${token}`,
+            Authorization: token ? `Bearer ${token}` : "",
           },
         });
       }

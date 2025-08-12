@@ -6,19 +6,34 @@ import { SignInButton } from "./auth/sign-in-button";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { useSession } from "@/lib/contexts/session-context";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Header() {
-  const { logout, user, isAuthenticated } = useSession();
-  console.log("Header: Auth state:", { isAuthenticated, user });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { logout, isAuthenticated } = useSession();
+
+  const pathname = usePathname();
+
+  const router = useRouter();
 
   const navItems = [
-    // { href: "/features", label: "Features" },
-
-    ...(isAuthenticated ? [{ href: "/dashboard", label: "Dashboard" }] : []),
+    { href: "/features", label: "Features" },
     { href: "/about", label: "About" },
   ];
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const handleStartChat = () => {
+    if (pathname.includes("therapy")) {
+      router.push("/dashboard");
+    } else {
+      router.push("/therapy/new");
+    }
+  };
+
+  const onButtonClick = () => {
+    console.log("on logout click");
+    setIsMenuOpen(false);
+    logout();
+  };
   return (
     <div className="w-full fixed top-0 z-50 bg-background/95 backdrop-blur">
       <div className="absolute inset-0 border-b border-primary/10"></div>
@@ -60,18 +75,21 @@ export default function Header() {
               {isAuthenticated ? (
                 <>
                   <Button
-                    asChild
-                    className="hidden md:flex gap-2 bg-primary/90 hover:bg-primary"
+                    className="hidden flex gap-2 bg-primary/90 hover:bg-primary"
+                    onClick={handleStartChat}
                   >
-                    <Link href="/dashboard">
-                      <MessageCircle className="w-4 h-4 mr-1" />
-                      Start Chat
-                    </Link>
+                    {pathname.includes("therapy") ? (
+                      "Dashboard"
+                    ) : (
+                      <>
+                        <MessageCircle className="w-4 h-4 mr-1" /> Start Chat
+                      </>
+                    )}
                   </Button>
                   <Button
                     variant="outline"
                     onClick={logout}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-muted-foreground hover:text-foreground transition-colors hidden md:flex"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
                     Sign out
@@ -110,6 +128,14 @@ export default function Header() {
                   {item.label}
                 </Link>
               ))}
+              {isAuthenticated && (
+                <Button
+                  className="flex gap-2 bg-primary/90 hover:bg-primary"
+                  onClick={onButtonClick}
+                >
+                  logout
+                </Button>
+              )}
             </nav>
           </div>
         )}

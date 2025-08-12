@@ -118,7 +118,6 @@ const calculateDailyStats = async (
       end: addDays(today, 1),
     })
   );
-  console.log(moodEntriesToday);
   const averageMood =
     moodEntriesToday.length > 0
       ? Math.round(
@@ -364,7 +363,6 @@ export default function DashboardPage() {
         const data = await calculateDailyStats(activities);
         setDailyStats(data);
       };
-      console.log("dailystat when activity cahnge");
       fetchStats();
     }
   }, [activities]);
@@ -405,7 +403,7 @@ export default function DashboardPage() {
           end: addDays(today, 1),
         })
       );
-      console.log(moodEntriesToday);
+
       const averageMood =
         moodEntriesToday.length > 0
           ? Math.round(

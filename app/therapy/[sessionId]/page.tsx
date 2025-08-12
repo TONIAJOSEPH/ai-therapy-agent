@@ -113,12 +113,10 @@ export default function TherapyPage() {
     params.sessionId as string
   );
   const [sessions, setSessions] = useState<ChatSession[]>([]);
-
   const handleNewSession = async () => {
     try {
       setIsLoading(true);
       const newSessionId = await createChatSession();
-      console.log("New session created:", newSessionId);
 
       // Update sessions list immediately
       const newSession: ChatSession = {
@@ -150,25 +148,21 @@ export default function TherapyPage() {
       try {
         setIsLoading(true);
         if (!sessionId || sessionId === "new") {
-          console.log("Creating new chat session...");
           const newSessionId = await createChatSession();
-          console.log("New session created:", newSessionId);
-          setSessionId(newSessionId);
-          window.history.pushState({}, "", `/therapy/${newSessionId}`);
+          if (newSessionId) {
+            setSessionId(newSessionId);
+            window.history.pushState({}, "", `/therapy/${newSessionId}`);
+          }
         } else {
-          console.log("Loading existing chat session:", sessionId);
           try {
             const history = await getChatHistory(sessionId);
-            console.log("Loaded chat history:", history);
             if (Array.isArray(history)) {
               const formattedHistory = history.map((msg) => ({
                 ...msg,
                 timestamp: new Date(msg.timestamp),
               }));
-              console.log("Formatted history:", formattedHistory);
               setMessages(formattedHistory);
             } else {
-              console.error("History is not an array:", history);
               setMessages([]);
             }
           } catch (historyError) {
@@ -224,19 +218,8 @@ export default function TherapyPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted");
     const currentMessage = message.trim();
-    console.log("Current message:", currentMessage);
-    console.log("Session ID:", sessionId);
-    console.log("Is typing:", isTyping);
-    console.log("Is chat paused:", isChatPaused);
     if (!currentMessage || isTyping || isChatPaused || !sessionId) {
-      console.log("Submission blocked:", {
-        noMessage: !currentMessage,
-        isTyping,
-        isChatPaused,
-        noSessionId: !sessionId,
-      });
       return;
     }
     setMessage("");
@@ -252,19 +235,15 @@ export default function TherapyPage() {
       // Check for stress signals
       const stressCheck = detectStressSignals(currentMessage);
       if (stressCheck) {
-        console.log("stresschecked");
         setStressPrompt(stressCheck);
         setIsTyping(false);
         return;
       }
-      console.log("Sending message to API...");
       // Send message to API
       const response = await sendChatMessage(sessionId, currentMessage);
-      console.log("Raw API response:", response);
       // Parse the response if it's a string
       const aiResponse =
         typeof response === "string" ? JSON.parse(response) : response;
-      console.log("Parsed AI response:", aiResponse);
       // Add AI response with metadata
       const assistantMessage: ChatMessage = {
         role: "assistant",
@@ -289,7 +268,6 @@ export default function TherapyPage() {
           },
         },
       };
-      console.log("Created assistant message:", assistantMessage);
       // Add the message immediately
       setMessages((prev) => [...prev, assistantMessage]);
       setIsTyping(false);
@@ -375,7 +353,6 @@ export default function TherapyPage() {
   };
 
   const handleSuggestedQuestion = async (text: string) => {
-    console.log("sessionid in therapy session");
     if (!sessionId) {
       const newSessionId = await createChatSession();
       setSessionId(newSessionId);
@@ -425,9 +402,9 @@ export default function TherapyPage() {
 
   return (
     <div className="relative max-w-7xl mx-auto px-4">
-      <div className="flex h-[calc(100vh-4rem)] mt-20 gap-6">
+      <div className="flex flex-col md:flex-row md:h-[calc(100vh-4rem)] mt-20 gap-6">
         {/* Sidebar with chat history */}
-        <div className="w-80 flex flex-col border-r bg-muted/30">
+        <div className="w-80 flex flex-col border-r bg-muted/30 max-h-[50vh] md:max-h-[200vh] overflow-y-auto w-full md:w-80">
           <div className="p-4 border-b">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold">Chat Sessions</h2>
@@ -460,7 +437,7 @@ export default function TherapyPage() {
             </Button>
           </div>
 
-          <ScrollArea className="flex-1 p-4">
+          <ScrollArea className="flex-1 p-4 h-[50px] md:h-[200px]">
             <div className="space-y-4">
               {sessions.map((session) => (
                 <div
@@ -510,7 +487,7 @@ export default function TherapyPage() {
         </div>
 
         {/* Main chat area */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-white dark:bg-background rounded-lg border">
+        <div className="md:flex-1 flex flex-col md:overflow-hidden bg-white dark:bg-background rounded-lg border w-full">
           {/* Chat header */}
           <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center gap-2">
