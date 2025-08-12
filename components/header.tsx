@@ -12,6 +12,8 @@ export default function Header() {
   console.log("Header: Auth state:", { isAuthenticated, user });
 
   const navItems = [
+    // { href: "/features", label: "Features" },
+
     ...(isAuthenticated ? [{ href: "/dashboard", label: "Dashboard" }] : []),
     { href: "/about", label: "About" },
   ];

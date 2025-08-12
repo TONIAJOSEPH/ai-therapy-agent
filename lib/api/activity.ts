@@ -44,7 +44,7 @@ export async function getAllActivity() {
   const response = await fetch(`/api/activities`, {
     headers: getAuthHeaders(),
   });
-  console.log("activity all response", response);
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || "Failed to get activity");

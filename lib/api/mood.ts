@@ -25,13 +25,13 @@ interface MoodResponse {
     timestamp: string;
   };
 }
-
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 export async function trackMood(
   data: MoodEntry
 ): Promise<{ success: boolean; data: MoodEntry }> {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("Not authenticated");
-  console.log("track mood in lib");
+
   const response = await fetch("/api/mood", {
     method: "POST",
     headers: {
@@ -94,6 +94,24 @@ export async function getMoodStats(
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || "Failed to fetch mood statistics");
+  }
+
+  return response.json();
+}
+
+export async function getMoodEntries() {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("Not authenticated");
+
+  const response = await fetch(`${API_BASE}/api/mood`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Failed to log activity");
   }
 
   return response.json();

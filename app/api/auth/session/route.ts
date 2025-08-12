@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  console.log(req);
+  console.log("in auth session get token", localStorage.getItem("token"));
   try {
     // For now, return a mock authenticated session
     // In a real app, you would validate the session token and return the actual user data

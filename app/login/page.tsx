@@ -18,20 +18,17 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     try {
       const response = await loginUser(email, password);
-
       // Store the token in localStorage
       localStorage.setItem("token", response.token);
-
       // Update session state
       await checkSession();
-
       // Wait for state to update before redirecting
       await new Promise((resolve) => setTimeout(resolve, 100));
       router.push("/dashboard");

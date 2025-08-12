@@ -27,40 +27,25 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const checkSession = async () => {
     try {
       const token = localStorage.getItem("token");
-      console.log(
-        "SessionContext: Token from localStorage:",
-        token ? "exists" : "not found"
-      );
-
       if (!token) {
-        console.log("no token");
         setUser(null);
         setLoading(false);
         router.push("/");
         return;
       }
-
-      console.log("SessionContext: Fetching user data...");
       const response = await fetch("/api/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log("SessionContext: Response status:", response.status);
-
       if (response.ok) {
         const data = await response.json();
-        console.log("SessionContext: User data received:", data);
         const userData = data.user;
         const { password, ...safeUserData } = userData;
         setUser(safeUserData);
-        console.log("SessionContext: User state updated:", safeUserData);
       } else {
-        console.log("SessionContext: Failed to get user data");
         setUser(null);
         localStorage.removeItem("token");
-        console.log("no user in auth/me");
         // router.push("/");
       }
     } catch (error) {
@@ -93,7 +78,6 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    console.log("SessionContext: Initial check");
     checkSession();
   }, []);
 

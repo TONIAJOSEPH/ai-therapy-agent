@@ -8,13 +8,14 @@ import { useSession } from "@/lib/contexts/session-context";
 import { useRouter } from "next/navigation";
 
 interface MoodFormProps {
+  onMoodLog: () => void;
   onSuccess?: () => void;
 }
 
-export function MoodForm({ onSuccess }: MoodFormProps) {
+export function MoodForm({ onSuccess, onMoodLog }: MoodFormProps) {
   const [moodScore, setMoodScore] = useState(50);
   const [isLoading, setIsLoading] = useState(false);
-  const { user, isAuthenticated, loading } = useSession();
+  const { isAuthenticated, loading } = useSession();
   const router = useRouter();
 
   const emotions = [
@@ -29,12 +30,7 @@ export function MoodForm({ onSuccess }: MoodFormProps) {
     emotions.find((em) => Math.abs(moodScore - em.value) < 15) || emotions[2];
 
   const handleSubmit = async () => {
-    console.log("MoodForm: Starting submission");
-    console.log("MoodForm: Auth state:", { isAuthenticated, loading, user });
-
     if (!isAuthenticated) {
-      console.log("MoodForm: User not authenticated");
-
       router.push("/login");
       return;
     }
@@ -42,11 +38,6 @@ export function MoodForm({ onSuccess }: MoodFormProps) {
     try {
       setIsLoading(true);
       const token = localStorage.getItem("token");
-      console.log(
-        "MoodForm: Token from localStorage:",
-        token ? "exists" : "not found"
-      );
-
       const response = await fetch("/api/mood", {
         method: "POST",
         headers: {
@@ -56,11 +47,8 @@ export function MoodForm({ onSuccess }: MoodFormProps) {
         body: JSON.stringify({ score: moodScore }),
       });
 
-      console.log("MoodForm: Response status:", response.status);
-
       if (!response.ok) {
         const error = await response.json();
-        console.error("MoodForm: Error response:", error);
         throw new Error(error.error || "Failed to track mood");
       }
 
@@ -69,6 +57,7 @@ export function MoodForm({ onSuccess }: MoodFormProps) {
 
       // Call onSuccess to close the modal
       onSuccess?.();
+      onMoodLog();
     } catch (error) {
       console.error("MoodForm: Error:", error);
     } finally {
