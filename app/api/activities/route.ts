@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-  // "https://ai-therapist-agent-backend.onrender.com";
 
-  // const token = localStorage.getItem("token");
   const token = req.headers.get("Authorization");
 
   if (!token) {
@@ -27,7 +25,6 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await res.json();
-    console.log("activities in client", data);
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(

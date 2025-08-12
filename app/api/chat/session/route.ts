@@ -5,7 +5,6 @@ const BACKEND_API_URL =
 
 export async function POST(req: NextRequest) {
   try {
-    console.log("Creating new chat session...");
     const authHeader = req.headers.get("Authorization");
 
     if (!authHeader) {
@@ -33,7 +32,7 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    console.log("Chat session created:", data);
+
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error creating chat session:", error);

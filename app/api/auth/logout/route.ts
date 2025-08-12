@@ -3,14 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-  const authHeader = req.headers.get("Authorization");
-
+  const token = req.headers.get("Authorization");
   try {
     const res = await fetch(`${API_URL}/auth/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Authorization: authHeader,
+        Authorization: token ? token : "",
       },
     });
     const data = await res.json();

@@ -30,7 +30,6 @@ export default function Header() {
   };
 
   const onButtonClick = () => {
-    console.log("on logout click");
     setIsMenuOpen(false);
     logout();
   };

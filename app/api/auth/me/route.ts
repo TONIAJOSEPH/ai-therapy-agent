@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  console.log("in client auth/me");
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-  // "https://ai-therapist-agent-backend.onrender.com";
   const token = req.headers.get("Authorization");
 
   if (!token) {

@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-  // "https://ai-therapist-agent-backend.onrender.com";
+
   const token = req.headers.get("Authorization");
-  console.log("mood post in api client");
+
   if (!token) {
     return NextResponse.json({ message: "No token provided" }, { status: 401 });
   }

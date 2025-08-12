@@ -3,8 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 const BACKEND_API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-// "https://ai-therapist-agent-backend.onrender.com";
-
 export type Message = {
   role: string;
   content: string;
@@ -17,7 +15,6 @@ export async function GET(
 ) {
   try {
     const { sessionId } = await context.params; // Await because it's a Promise
-    console.log(`Getting chat history for session ${sessionId}`);
 
     const response = await fetch(
       `${BACKEND_API_URL}/chat/sessions/${sessionId}/history`,
@@ -39,7 +36,6 @@ export async function GET(
     }
 
     const data = await response.json();
-    console.log("Chat history retrieved successfully:", data);
 
     // Format the response to match the frontend's expected format
     const formattedMessages = data.map((msg: Message) => ({
